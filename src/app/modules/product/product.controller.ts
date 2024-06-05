@@ -1,13 +1,14 @@
 import { Request, Response } from "express";
-import { TProduct } from "./product.interface";
 import { ProductService } from "./product.service";
 
 const createProduct = async (req: Request, res: Response) => {
   try {
     // request
-      const productData: TProduct = req.body;
-    const result = await ProductService.createProductIntoDB(productData);
 
+    const products = req.body;
+
+    const result = await ProductService.createProductIntoDB(products);
+      
     // response
     res.status(200).json({
       success: true,
@@ -39,7 +40,6 @@ const getProduct = async (req: Request, res: Response) => {
     });
   }
 };
-
 
 export const productControllers = {
   createProduct,
