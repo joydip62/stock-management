@@ -52,6 +52,24 @@ const createOrder = async (req: Request, res: Response) => {
   }
 };
 
+const getOrder = async (req: Request, res: Response) => { 
+    try {
+      const result = await OrderService.getAllOrdersFromDB();
+      return res.status(200).json({
+        success: true,
+        message: "Orders fetched successfully!",
+        data: result,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: "Error Occurred While Fetching Orders",
+        error,
+      });
+    }
+}
+
 export const OrderControllers = {
   createOrder,
+  getOrder,
 };
