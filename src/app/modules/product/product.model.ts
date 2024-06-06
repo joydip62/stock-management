@@ -27,4 +27,16 @@ const productSchema = new Schema<TProduct>({
   inventory: { type: inventorySchema, required: true },
 });
 
+
+// pre save middleware
+productSchema.pre('save', function (next) {
+  this.inventory.inStock = this.inventory.quantity > 0;
+  next()
+})
+
+// post save middleware
+productSchema.post('save', function () {
+  console.log(`Product ${this.name} saved successfully`);
+})
+
 export const ProductModel = model<TProduct>("Product", productSchema);

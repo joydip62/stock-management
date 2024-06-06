@@ -10,7 +10,7 @@ const createProduct = async (req: Request, res: Response) => {
     const productsData = req.body;
 
     // Validate the request data
-    const { error } = productValidationSchema.validate(productsData);
+    const { error, value } = productValidationSchema.validate(productsData);
 
     if (error) {
       return res.status(400).json({
@@ -19,7 +19,7 @@ const createProduct = async (req: Request, res: Response) => {
         error: error.details,
       });
     }
-    const result = await ProductService.createProductIntoDB(productsData);
+    const result = await ProductService.createProductIntoDB(value);
 
     res.status(201).json({
       success: true,
