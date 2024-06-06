@@ -52,22 +52,37 @@ const createOrder = async (req: Request, res: Response) => {
   }
 };
 
-const getOrder = async (req: Request, res: Response) => { 
-    try {
-      const result = await OrderService.getAllOrdersFromDB();
-      return res.status(200).json({
-        success: true,
-        message: "Orders fetched successfully!",
-        data: result,
-      });
-    } catch (error) {
-      return res.status(500).json({
+const getOrder = async (req: Request, res: Response) => {
+  try {
+    const email = req.params.email as string || "";
+    let result;
+
+    if (email) {
+      result = await OrderService.getAllOrdersFromDB(email);
+    } else {
+      result = await OrderService.getAllOrdersFromDB();
+    }
+
+    if (!result || result.length === 0) {
+      return res.status(404).json({
         success: false,
-        message: "Error Occurred While Fetching Orders",
-        error,
+        message: email ? "No orders found for this email" : "Orders not found",
       });
     }
-}
+
+     return res.status(200).json({
+      success: true,
+      message: "Orders fetched successfully!",
+      data: result,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Error Occurred While Fetching Orders",
+      error,
+    });
+  }
+};
 
 export const OrderControllers = {
   createOrder,
