@@ -1,19 +1,30 @@
 import { Request, Response } from "express";
+import { TProduct } from "./product.interface";
 import { ProductService } from "./product.service";
+import productValidationSchema from "./product.validation";
+
 
 const createProduct = async (req: Request, res: Response) => {
   try {
-    // request
 
-    const products = req.body;
+    const productsData = req.body;
 
-    const result = await ProductService.createProductIntoDB(products);
-      
-    // response
-    res.status(200).json({
+    // Validate the request data
+    const { error } = productValidationSchema.validate(productsData);
+
+    if (error) {
+      return res.status(400).json({
+        success: false,
+        message: "Validation failed",
+        error: error.details,
+      });
+    }
+    const result = await ProductService.createProductIntoDB(productsData);
+
+    res.status(201).json({
       success: true,
-      message: "Product created successfully!",
-      date: result,
+      message: "Products created successfully!",
+      data: result,
     });
   } catch (error) {
     res.status(500).json({
