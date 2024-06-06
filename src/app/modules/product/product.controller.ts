@@ -36,7 +36,22 @@ const createProduct = async (req: Request, res: Response) => {
 // get all product controllers
 const getProduct = async (req: Request, res: Response) => {
   try {
-    const result = await ProductService.getAllProductFromDB();
+     const searchQuery = (req.query.searchTerm as string) || "";
+     let result;
+
+     if (searchQuery) {
+       result = await ProductService.getAllProductFromDB(searchQuery);
+     } else {
+       result = await ProductService.getAllProductFromDB();
+     }
+
+     if (!result || result.length === 0) {
+       return res.status(404).json({
+         success: false,
+         message: "Product Not Found",
+       });
+     }
+
     res.status(200).json({
       success: true,
       message: "Products fetched successfully!",
