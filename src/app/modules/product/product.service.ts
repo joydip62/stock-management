@@ -23,9 +23,16 @@ const updateProductIntoDB = async (productId: string, updatedData: TProduct) => 
   return result;
 };
 
+
+const deleteProductIntoDB = async (productId: string) => { 
+  const result = await ProductModel.findByIdAndDelete(productId);
+  return result;
+}
+
 export const ProductService = {
   createProductIntoDB,
   getAllProductFromDB,
   getSingleProductFromDB,
   updateProductIntoDB,
+  deleteProductIntoDB,
 };

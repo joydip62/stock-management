@@ -74,21 +74,10 @@ const getSingleProduct = async (req: Request, res: Response) => {
 // update product controllers
 const updateProduct = async (req: Request, res: Response) => {
   try {
-    // Validate the request data
-    const { error, value } = productValidationSchema.validate(req.body);
-
-    if (error) {
-      return res.status(400).json({
-        success: false,
-        message: "Validation failed",
-        error: error.details,
-      });
-    }
     const result = await ProductService.updateProductIntoDB(
       req.params.productID,
-      value
+      req.body
     );
-
     res.json({
       success: true,
       message: "Product updated successfully!",
@@ -102,9 +91,30 @@ const updateProduct = async (req: Request, res: Response) => {
   }
 };
 
+// delete product controller  
+const deleteProduct = async (req: Request, res: Response) => { 
+  try {
+    const result = await ProductService.deleteProductIntoDB(
+      req.params.productID
+    );
+
+    res.json({
+      success: true,
+      message: "Product deleted successfully!",
+      data: null,
+    });
+  } catch {
+    res.status(500).json({
+      success: false,
+      message: "Product Not Found",
+    });
+  }
+}
+
 export const productControllers = {
   createProduct,
   getProduct,
   getSingleProduct,
   updateProduct,
+  deleteProduct,
 };
