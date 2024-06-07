@@ -14,8 +14,16 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Welcome Developers !!!");
 });
 
+
 // Use the product routes
 app.use("/api", ProductRoutes);
 app.use("/api", OrderRoutes);
 
+
+app.use((req: Request, res: Response) => {
+  res.status(404).json({
+    success: false,
+    message: "Route not found",
+  });
+});
 export default app;
